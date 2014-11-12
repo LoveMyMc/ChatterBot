@@ -27,6 +27,10 @@ public class AsyncChat implements Listener {
 			return;
 		ProxiedPlayer sender = (ProxiedPlayer) e.getSender();
 		if (!e.isCancelled()) {
+			if(e.getMessage().startsWith(";")){
+				e.setMessage(e.getMessage().replaceFirst(";", ""));
+				CBAssign.assignie.put(sender.getName(), ChatterBot.bot1.createSession());
+			}
 			if (CBAssign.assignie.containsKey(sender.getName())) {
 				final ChatterBotSession cbSession = CBAssign.assignie
 						.get(sender.getName());

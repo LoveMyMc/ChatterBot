@@ -26,6 +26,16 @@ public class CBCommand extends Command{
             if (p.hasPermission("chatterbot.use")) {
                 if (args.length == 0) {
                     p.sendMessage(ChatterBot.chatterBotName + ChatColor.WHITE + " Correct usage: " + ChatColor.YELLOW + "/cb <message>");
+                }else if(args.length == 1 && args[0].equalsIgnoreCase("stop")){
+                	p.sendMessage(ChatterBot.chatterBotName + ChatColor.BLUE + " I'll be quiet. Sorry!");
+                }else if(args.length == 1 && args[0].equalsIgnoreCase("help")){
+                	String[] strings = new String[]{
+                			ChatterBot.chatterBotName + ChatColor.YELLOW + "Hi! I'm " + ChatterBot.chatterBotName + ".",
+                			ChatterBot.chatterBotName + ChatColor.YELLOW + "To talk to me do " + ChatColor.WHITE + "/cb Hi!",
+                			ChatterBot.chatterBotName + ChatColor.YELLOW + "Or say ;Hi!",
+                			ChatterBot.chatterBotName + ChatColor.YELLOW + "If you want me to be quiet, say " + ChatColor.WHITE + "/cb stop"
+                	};
+                	p.sendMessages(strings);
                 } else {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < args.length; i++) {
