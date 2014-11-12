@@ -1,26 +1,28 @@
-package me.xTDKx.CB.Commands;
+package com.lovemymc.dev.cb.Commands;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
 
 import com.google.code.chatterbotapi.ChatterBotSession;
-import me.xTDKx.CB.ChatterBot;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import com.lovemymc.dev.cb.ChatterBot;
 
 
-public class CBCommand implements CommandExecutor {
+public class CBCommand extends Command{
     private ChatterBot plugin;
 
     public CBCommand(ChatterBot p) {
+    	super("chatterbox", null, "cb");
         plugin = p;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String cmdString, String[] args) {
-        if (sender instanceof Player) {
-            final Player p = (Player) sender;
+	@SuppressWarnings("deprecation")
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+
+        if (sender instanceof ProxiedPlayer) {
+            final ProxiedPlayer p = (ProxiedPlayer) sender;
             if (p.hasPermission("chatterbot.use")) {
                 if (args.length == 0) {
                     p.sendMessage(ChatterBot.chatterBotName + ChatColor.WHITE + " Correct usage: " + ChatColor.YELLOW + "/cb <message>");
@@ -39,7 +41,7 @@ public class CBCommand implements CommandExecutor {
                     if (ChatterBot.sessions.containsKey(p.getName())) {
                         final ChatterBotSession cbSession = ChatterBot.sessions.get(p.getName());
 
-                        Bukkit.getScheduler().runTaskAsynchronously(ChatterBot.instance, new Runnable() {
+                        plugin.getProxy().getScheduler().runAsync(ChatterBot.instance, new Runnable() {
                             @Override
                             public void run() {
                                 final StringBuilder sb = new StringBuilder();
@@ -48,24 +50,18 @@ public class CBCommand implements CommandExecutor {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-
-                                Bukkit.getScheduler().runTask(ChatterBot.instance, new Runnable() {
-                                    @Override
-                                    public void run() {
                                         if (plugin.getConfig().getBoolean("Loud-Mode")) {
-                                            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChatterBot-Format").replace("%name%", ChatterBot.chatterBotName).replace("%message%", sb.toString())));
+                                            plugin.getProxy().broadcast(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChatterBot-Format").replace("%name%", ChatterBot.chatterBotName).replace("%message%", sb.toString())));
                                         } else {
                                             p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChatterBot-Format").replace("%name%", ChatterBot.chatterBotName).replace("%message%", sb.toString())));
                                         }
-                                    }
-                                });
                             }
                         });
                     } else {
                         final ChatterBotSession cbSession = ChatterBot.bot1.createSession();
                         ChatterBot.sessions.put(p.getName(), cbSession);
 
-                        Bukkit.getScheduler().runTaskAsynchronously(ChatterBot.instance, new Runnable() {
+                        plugin.getProxy().getScheduler().runAsync(ChatterBot.instance, new Runnable() {
                             @Override
                             public void run() {
                                 final StringBuilder sb = new StringBuilder();
@@ -74,17 +70,11 @@ public class CBCommand implements CommandExecutor {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-
-                                Bukkit.getScheduler().runTask(ChatterBot.instance, new Runnable() {
-                                    @Override
-                                    public void run() {
                                         if (plugin.getConfig().getBoolean("Loud-Mode")) {
-                                            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChatterBot-Format").replace("%name%", ChatterBot.chatterBotName).replace("%message%", sb.toString())));
+                                            plugin.getProxy().broadcast(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChatterBot-Format").replace("%name%", ChatterBot.chatterBotName).replace("%message%", sb.toString())));
                                         } else {
                                             p.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChatterBot-Format").replace("%name%", ChatterBot.chatterBotName).replace("%message%", sb.toString())));
                                         }
-                                    }
-                                });
                             }
                         });
                     }
@@ -96,6 +86,7 @@ public class CBCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Only players can use this command.");
         }
 
-        return false;
-    }
+        return;
+		
+	}
 }
