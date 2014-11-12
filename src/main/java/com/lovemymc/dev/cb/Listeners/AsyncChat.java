@@ -61,8 +61,9 @@ public class AsyncChat implements Listener {
 			} else {
 				for (String word : ChatterBot.instance.getConfig()
 						.getStringList("Trigger-Word-List")) {
-					if (e.getMessage().toLowerCase()
-							.contains(word.toLowerCase())) {
+					if (!ChatterBot.instance.getConfig().getBoolean("No-Trigger-Words")
+							&& e.getMessage().toLowerCase()
+									.contains(word.toLowerCase())) {
 						if (triggered.containsKey(sender.getName())) {
 							triggered
 									.put(sender.getName(),

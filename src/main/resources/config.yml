@@ -7,8 +7,9 @@ Loud-Mode: false
 Loud-Format: "&b@ChatterBot &f%message%"
 
 Trigger-Words: false
+No-Trigger-Words: true
 
-Trigger-Word-Timeout: 30
+Trigger-Word-Timeout: 10
 
 Trigger-Word-List:
 - 'Jim'
