@@ -1,0 +1,4 @@
+name: ChatterBot
+main: com.lovemymc.dev.cb.ChatterBot
+version: 1.7
+author: xTDKx and Cory Redmond
